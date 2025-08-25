@@ -22,14 +22,3 @@
     https://www.tinkercad.com/things/kngLnqo2HEU?sharecode=OVpOeJsUP3bOHBkzbkWCfGcuSIswqXiISYQiG6UzotA
     https://github.com/TempeHS/TempeHS_Ardunio_Bootcamp/blob/main/11.ultrasonicSensor/Bootcamp-ultrasonicSensor.png
 */
-
-#include "Ultrasonic.h"
-
-void setup()
-{
-  
-}
-void loop()
-{
-  
-}
