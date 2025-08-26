@@ -38,18 +38,33 @@ Servo myservo; // create servo object to control a servo
 Ultrasonic us_sensor(usPin); // create ultrasonic object
 
 int potpin = A1; // analog pin used to connect the potentiometer
-int val;    // variable to read the value from the analog pin
+int val;         // variable to read the value from the analog pin
 
-void setup() {
-myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
-Serial.begin(9600);
-Serial.println(baud 9600);
-Serial.println("----------------")
+// Configure OLED
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C OLED(U8G2_R0, SCL, SDA, U8X8_PIN_NONE);
+
+void setup() { 
+  myservo.attach(servoPin); // attaches the servo on pin 6 to the servo object 
+  Serial.begin(9600);
+  Serial.println("Baud 9600");
+  Serial.println("------");
+
+  OLED.begin();
+  OLED.setFont(u8g2_font_6x12_tf);
+  OLED.drawStr(0, 10, "Version 0.2");
+  OLED.nextPage();
+  delay(3000);
 }
 
-void loop() {                     
-  val = analogRead (potpin);          // read the value of the potentiometer
-  val = map(val, 0, 1023, 0, 180);    // scale it to use it with the servo
-  myservo.write(val);                 // sets the servo position according to
-  delay(15);                          // waits for the servo to get there
+void loop() { 
+   unsigned long RangeInCentimeters;
+  RangeInCentimeters = us_sensor.distanceRead(); // two measurements
+  RangeInCentimeters = map(RangeInCentimeters, 0, 357, 0, 180);
+  myservo.write(RangeInCentimeters);
+
+  val = analogRead(potpin);         // reads the value of the potentiometer
+  val = map(val, 0, 1023, 0, 180);  // scale it to use it with the servo (val)
+
+  myservo.write(val);               // sets the servo position according to the potentiometer
+  delay(15);                        // waits for the servo to get there
 }
