@@ -33,6 +33,7 @@
 
 unsigned static int servoPin = 6;
 unsigned static int usPin = 5;
+unsigned static int ledPin = A1;
 
 Servo myservo; // create servo object to control a servo
 Ultrasonic us_sensor(usPin); // create ultrasonic object
@@ -48,38 +49,27 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Baud 9600");
   Serial.println("------");
-
   OLED.begin();
-  OLED.setFont(u8g2_font_6x12_tf);
-  OLED.drawStr(0, 10, "Version 0.2");
-  OLED.nextPage();
-  delay(3000);
-}
+  }
 
 void loop() { 
 
-  String inputString = "10 cm";
-  String cleanString = "";
-
-  // Read \r and \n from the input string 
-  for (unsigned int i = 0; i < inputString.length(); i++) {
-    char inChar = inputString[i];
-    if (inChar != '\n' && inChar != '\r') {
-      cleanString += inChar;
-    }
-    if(inChar == '\n'){
-      cleanString += '_';
-    }
+  OLED.clearBuffer();
+  unsigned long range_in_cm;
+  range_in_cm = us_sensor.distanceRead();
+  if (range_in_cm <11) {
+  digitalWrite(ledPin, HIGH);
+  OLED.drawStr(0, 30, "On");
+  } else {
+  digitalWrite(ledPin, LOW);
+  OLED.drawStr(0, 30, "Off");
   }
-
-   unsigned long RangeInCentimeters;                                       
-  RangeInCentimeters = us_sensor.distanceRead(); // two measurements
-  RangeInCentimeters = map(RangeInCentimeters, 0, 357, 0, 180);
-  myservo.write(RangeInCentimeters);
-
-  val = analogRead(potpin);         // reads the value of the potentiometer
-  val = map(val, 0, 1023, 0, 180);  // scale it to use it with the servo (val)
-
-  myservo.write(val);               // sets the servo position according to the potentiometer
-  delay(15);                        // waits for the servo to get there
+  String distanceString = String(range_in_cm);
+  int servoAngle = map(range_in_cm, 0, 100, 0, 180);
+  myservo.write(servoAngle);
+  String servoString = String(range_in_cm);
+  OLED.setFont(u8g2_font_6x12_tf);
+  OLED.drawStr(0, 10, distanceString.c_str());
+  OLED.drawStr(0, 10, servoString.c_str());
+  OLED.nextPage();
 }
