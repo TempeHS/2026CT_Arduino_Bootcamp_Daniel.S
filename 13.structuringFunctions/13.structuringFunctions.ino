@@ -22,45 +22,38 @@
       
 */
 
-int LED_PIN = 13;
-bool LED_PIN_State = HIGH;
-int randomNum09;
-
-void setup() {
-  // initialize digital pin with built in LED as output.
-  pinMode(LED_PIN, OUTPUT);
-  // inititise the serial monitor for debugging and output
-  Serial.begin(9600); 
-  randomSeed(analogRead(0));
+int sound_sensor = A2; //assign to pin A2
+ 
+void setup() 
+{
+  Serial.begin(9600); //begin Serial Communication
+}
+ 
+void loop()
+{
+  int soundValue = 0; //create variable to store many different readings
+  for (int i = 0; i < 32; i++) //create a for loop to read 
+  { soundValue += analogRead(sound_sensor);  } //read the sound sensor
+ 
+  soundValue >>= 5; //bitshift operation 
+  Serial.println(soundValue); //print the value of sound sensor
+ 
+ 
+//if a value higher than 500 is registered, we will print the following
+//this is done so that we can clearly see if the threshold is met
+  if (soundValue > 400) { 
+    Serial.println("         ||        ");
+    Serial.println("       ||||||      ");
+    Serial.println("     |||||||||     ");
+    Serial.println("   |||||||||||||   ");
+    Serial.println(" ||||||||||||||||| ");
+    Serial.println("   |||||||||||||   ");
+    Serial.println("     |||||||||     ");
+    Serial.println("       ||||||      ");
+    Serial.println("         ||        ");
+  }
+  delay(200); //a shorter delay between readings
 }
 
-void loop() {
-  TogglePin(); //Call the TogglePin function
-  digitalWrite(LED_PIN, LED_PIN_State); //Set PIN state
-  DebugLED(); // Write PIN state to the serial monitor for debugging
-  MyDelayFunction(); //Call the MyDelayFunction
 
-  generateRandomNumber();
-  Serial.println(randomNum09);
-  // take through to Serial.println(generateRandomNumber(0, 9)); and back 1 step
-
-}
-
-// A function that waits for a second (1000 milliseconds)
-void MyDelayFunction() {
-  delay(1000); 
-}
-
-// A Function that toggles a bool value true to false or false to true 
-void TogglePin() {
-  LED_PIN_State = !LED_PIN_State; 
-}
-
-void DebugLED() {
-  Serial.println("The LED connected to PIN " + String(LED_PIN) + " is " + String(LED_PIN_State));     // Print LED status to serial monitor
-}
-
-void generateRandomNumber () {
-  randomNum09 = random(0, 9);
-}
 

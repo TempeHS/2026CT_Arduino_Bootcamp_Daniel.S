@@ -9,7 +9,7 @@ enough, it turns on the red led to indicate to people at the station the train i
 | --- | --- | --- |
 | Sound detector | Sense sound | I2C |
 | OLED screen | displays text | I2C |
-| LED | lights up | D1 |
+| LED | lights up | D6 |
 ###
 
 -
